@@ -1,0 +1,11 @@
+# Firefix cache
+.snap/
+.mozilla/
+*.jsonlz4
+
+# System 
+.DS_Store
+Thumbs.db
+
+# Logs 
+*.log
