@@ -35,8 +35,7 @@ jobs:
           file: Dockerfile1.app
           push: true
           tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
+          # Убрали кэширование - оно не поддерживается по умолчанию
 
   deploy:
     needs: [build-and-push]
@@ -63,12 +62,11 @@ jobs:
           curl -X POST https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage \
             -d "chat_id=${{ secrets.TELEGRAM_CHAT_ID }}" \
             -d "text=✅ *Deployment Successful!*
-            
+
             📦 Repository: ${{ github.repository }}
             🔀 Branch: ${{ github.ref_name }}
-            🔨 Commit: ${{ github.event.head_commit.message }}
             👤 Author: ${{ github.actor }}
-            
+
             [View Workflow](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})" \
             -d "parse_mode=Markdown"
 
@@ -78,10 +76,9 @@ jobs:
           curl -X POST https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage \
             -d "chat_id=${{ secrets.TELEGRAM_CHAT_ID }}" \
             -d "text=❌ *Deployment Failed!*
-            
-             Repository: ${{ github.repository }}
+
+            Repository: ${{ github.repository }}
             🔀 Branch: ${{ github.ref_name }}
-            🔨 Commit: ${{ github.event.head_commit.message }}
-            
+
             [View Logs](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})" \
             -d "parse_mode=Markdown"
